@@ -25,10 +25,7 @@ from sklearn.preprocessing import MinMaxScaler, LabelEncoder, StandardScaler, Ro
 
 import warnings
 warnings.simplefilter(action="ignore")
-
-# Replace with relative path for GitHub
 data = pd.read_csv("insurance.csv")
-
 def check_data(dataframe, head=5):
     print("##################### Shape #####################")
     print(dataframe.shape)
