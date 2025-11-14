@@ -39,7 +39,6 @@ def check_data(dataframe, head=5):
     print(dataframe.isnull().sum())
     print("##################### Quantiles #####################")
     numeric_data = data.select_dtypes(include='number')
-    # quantile() işlemi
     quantiles = numeric_data.quantile([0, 0.05, 0.25, 0.50, 0.75, 0.90, 0.95, 0.99, 1]).T
     print(quantiles)
 check_data(data)
