@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>US Health Insurance EDA | Anh Thai</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --bg-soft: #020617;
+      --card: #020617;
+      --accent: #3b82f6;
+      --accent-soft: rgba(59, 130, 246, 0.15);
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --border-subtle: rgba(148, 163, 184, 0.3);
+      --radius-lg: 18px;
+      --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.85);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #1e293b 0, #020617 45%, #000 100%);
+      color: var(--text-main);
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 24px 16px 40px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      gap: 12px;
+    }
+
+    .title-block h1 {
+      font-size: 28px;
+      margin-bottom: 4px;
+    }
+
+    .title-block p {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .back-link {
+      font-size: 13px;
+      color: #93c5fd;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.8);
+    }
+
+    .back-link:hover {
+      border-color: #93c5fd;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 4px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.35);
+      margin-bottom: 18px;
+      overflow-x: auto;
+    }
+
+    .tab {
+      padding: 8px 14px;
+      font-size: 13px;
+      cursor: pointer;
+      border-radius: 10px 10px 0 0;
+      border: 1px solid transparent;
+      border-bottom: none;
+      color: var(--text-muted);
+      background: transparent;
+      white-space: nowrap;
+    }
+
+    .tab.active {
+      color: var(--text-main);
+      background: #020617;
+      border-color: rgba(148, 163, 184, 0.5);
+      border-bottom: 1px solid #020617;
+    }
+
+    .tab-content-wrapper {
+      border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      background: linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.78));
+      padding: 16px 16px 18px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .tab-panel {
+      display: none;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    h2 {
+      font-size: 15px;
+      margin-bottom: 8px;
+      color: var(--text-main);
+    }
+
+    h3 {
+      font-size: 14px;
+      margin-top: 12px;
+      margin-bottom: 4px;
+      color: var(--text-main);
+    }
+
+    ul {
+      padding-left: 18px;
+      margin-top: 4px;
+    }
+
+    li {
+      margin-bottom: 4px;
+    }
+
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 12px;
+      margin-top: 6px;
+    }
+
+    .meta-pill {
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+    }
+
+    .code-link-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .code-link {
+      font-size: 12px;
+      color: #93c5fd;
+      border-bottom: 1px solid transparent;
+      padding-bottom: 1px;
+    }
+
+    .code-link:hover {
+      border-color: #93c5fd;
+    }
+
+    img.chart {
+      width: 100%;
+      border-radius: 12px;
+      margin-top: 8px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+    }
+
+    .two-cols {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 16px;
+      margin-top: 10px;
+    }
+
+    .note {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    @media (max-width: 720px) {
+      .two-cols {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="title-block">
+        <h1>US Health Insurance EDA</h1>
+        <p>Exploring how demographic and lifestyle factors relate to medical insurance charges.</p>
+      </div>
+      <a class="back-link" href="index.html">← Back to portfolio</a>
+    </header>
+
+    <!-- Tabs -->
+    <div class="tabs" role="tablist">
+      <button class="tab active" data-tab="overview">Overview</button>
+      <button class="tab" data-tab="data">Input / Data</button>
+      <button class="tab" data-tab="eda">EDA &amp; Charts</button>
+      <button class="tab" data-tab="models">Models &amp; Output</button>
+      <button class="tab" data-tab="code">Notebook &amp; Code</button>
+    </div>
+
+    <!-- Tab content -->
+    <div class="tab-content-wrapper">
+      <!-- Overview -->
+      <section id="tab-overview" class="tab-panel active">
+        <h2>1. Project Overview</h2>
+        <p>
+          This project analyzes the classic US health insurance dataset to understand how factors like
+          <strong>age, BMI, smoking status, children, and region</strong> relate to annual medical charges.
+        </p>
+
+        <h3>Objective</h3>
+        <ul>
+          <li>Identify key drivers of high insurance charges.</li>
+          <li>Visualize patterns and outliers in the dataset.</li>
+          <li>Build simple regression models to predict charges and compare performance.</li>
+        </ul>
+
+        <div class="meta-row">
+          <span class="meta-pill">Tools: Python · pandas · matplotlib</span>
+          <span class="meta-pill">Dataset: 1,338 rows · 7 features</span>
+          <span class="meta-pill">Type: Supervised regression</span>
+        </div>
+      </section>
+
+      <!-- Data -->
+      <section id="tab-data" class="tab-panel">
+        <h2>2. Input / Data</h2>
+        <p>The dataset contains one row per insurance policyholder with the following columns:</p>
+        <ul>
+          <li><strong>age</strong> – age of the primary beneficiary (18–64).</li>
+          <li><strong>sex</strong> – male / female.</li>
+          <li><strong>bmi</strong> – body mass index (kg/m²).</li>
+          <li><strong>children</strong> – number of dependents covered by insurance.</li>
+          <li><strong>smoker</strong> – yes / no.</li>
+          <li><strong>region</strong> – northeast, northwest, southeast, southwest.</li>
+          <li><strong>charges</strong> – annual medical insurance charges (target variable).</li>
+        </ul>
+
+        <h3>Data preparation</h3>
+        <ul>
+          <li>Loaded the CSV and validated the shape and data types.</li>
+          <li>Checked missing values (none in this dataset).</li>
+          <li>Explored distributions for age, BMI, charges, and number of children.</li>
+          <li>Created features for modelling (e.g., one-hot encoding for categorical variables).</li>
+        </ul>
+
+        <p class="note">
+          Dataset source:
+          <a class="code-link" href="https://github.com/ttna812/health_insurance_2023/blob/main/insurance.csv" target="_blank">
+            insurance.csv on GitHub
+          </a>
+        </p>
+      </section>
+
+      <!-- EDA -->
+      <section id="tab-eda" class="tab-panel">
+        <h2>3. Exploratory Data Analysis &amp; Charts</h2>
+        <div class="two-cols">
+          <div>
+            <h3>BMI vs Charges (by smoking status)</h3>
+            <p>
+              There is a strong upward relationship between BMI and charges, especially for smokers. Many of the highest-cost
+              cases come from high-BMI smokers.
+            </p>
+            <img src="health_insurance_charges_bmi.png" alt="BMI vs charges scatter plot" class="chart" />
+          </div>
+          <div>
+            <h3>Age distribution</h3>
+            <p>
+              Most policyholders are between 20 and 55 years old, with a relatively uniform distribution across working age.
+            </p>
+            <img src="health_insurance_age_distribution.png" alt="Age distribution histogram" class="chart" />
+          </div>
+        </div>
+
+        <div class="two-cols">
+          <div>
+            <h3>Charges by smoking status</h3>
+            <p>
+              Smokers have much higher median and upper-quartile charges, confirming that smoking is one of the main drivers
+              of cost.
+            </p>
+            <img src="health_insurance_smoker_charges.png" alt="Boxplot of charges by smoker" class="chart" />
+          </div>
+          <div>
+            <h3>Average charges by region</h3>
+            <p>
+              Average charges are relatively similar across regions, suggesting region plays a smaller role compared to BMI,
+              age, and smoking.
+            </p>
+            <img src="health_insurance_region_charges.png" alt="Average charges by region bar chart" class="chart" />
+          </div>
+        </div>
+
+        <p class="note">
+          All charts are generated in Python using <code>matplotlib</code>. See the notebook tab for full code.
+        </p>
+      </section>
+
+      <!-- Models -->
+      <section id="tab-models" class="tab-panel">
+        <h2>4. Models &amp; Output</h2>
+        <p>
+          I experimented with several regression models to predict <strong>charges</strong> from the available features.
+          The goal is not to build a production-ready model, but to compare baselines and understand which variables matter.
+        </p>
+
+        <h3>Models tested</h3>
+        <ul>
+          <li>Linear Regression</li>
+          <li>Regularized models: Ridge / Lasso / ElasticNet</li>
+          <li>Tree-based models: Random Forest, Gradient Boosting, XGBoost / CatBoost (where applicable)</li>
+        </ul>
+
+        <h3>Example evaluation metrics</h3>
+        <ul>
+          <li><strong>RMSE</strong> – root mean squared error on the test set.</li>
+          <li><strong>MAE</strong> – mean absolute error (more robust to outliers).</li>
+          <li><strong>R²</strong> – proportion of variance in charges explained by the model.</li>
+        </ul>
+
+        <p class="note">
+          In general, tree-based models outperform simple linear models, especially due to non-linear effects in BMI and age
+          and interactions with smoking.
+        </p>
+      </section>
+
+      <!-- Code -->
+      <section id="tab-code" class="tab-panel">
+        <h2>5. Notebook &amp; Code</h2>
+        <p>
+          All data cleaning, EDA, visualizations, and modelling are implemented in a Jupyter notebook.
+          You can inspect the full workflow or reuse parts of the code.
+        </p>
+
+        <div class="code-link-row">
+          <a class="code-link" href="https://github.com/ttna812/health_insurance_2023/blob/main/notebook_health.ipynb" target="_blank">
+            📓 Open analysis notebook on GitHub
+          </a>
+          <a class="code-link" href="https://github.com/ttna812/health_insurance_2023" target="_blank">
+            🐙 View project repository
+          </a>
+          <a class="code-link" href="https://github.com/ttna812/health_insurance_2023/blob/main/insurance.csv" target="_blank">
+            📂 Download dataset (CSV)
+          </a>
+        </div>
+
+        <h3>Example steps in the notebook</h3>
+        <ul>
+          <li>Load and inspect dataset, check for missing values and data types.</li>
+          <li>Univariate distributions and summary statistics for each feature.</li>
+          <li>Bivariate relationships (scatterplots, boxplots, grouped summaries).</li>
+          <li>Feature engineering and encoding for modelling.</li>
+          <li>Training multiple models and comparing metrics.</li>
+        </ul>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    // Simple tab logic
+    const tabs = document.querySelectorAll(".tab");
+    const panels = document.querySelectorAll(".tab-panel");
+
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        const target = tab.getAttribute("data-tab");
+
+        tabs.forEach((t) => t.classList.remove("active"));
+        panels.forEach((p) => p.classList.remove("active"));
+
+        tab.classList.add("active");
+        document.getElementById(`tab-${target}`).classList.add("active");
+      });
+    });
+  </script>
+</body>
+</html>
